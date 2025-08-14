@@ -108,6 +108,20 @@ const GraphicsPage = ({ data, disease, isLoading, toggleGraphicsPage }) => {
     ]
   };
   
+  // İlaç Fiyatları Grafiği için veri
+  const drugPricesData = {
+    labels: data.drugPrices?.map(item => item.drugName) || [],
+    datasets: [
+      {
+        label: 'İlaç Fiyatları (TL)',
+        data: data.drugPrices?.map(item => item.price) || [],
+        backgroundColor: 'rgba(153, 102, 255, 0.7)',
+        borderColor: 'rgba(153, 102, 255, 1)',
+        borderWidth: 1
+      }
+    ]
+  };
+  
   // Chart options - Chatbot UI ile uyumlu tema
   const chartTheme = {
     color: 'rgba(60, 60, 80, 0.8)',
@@ -308,7 +322,23 @@ const GraphicsPage = ({ data, disease, isLoading, toggleGraphicsPage }) => {
           </div>
         </div>
         
-        {/* Pie Chart - Risk Factors */}
+        {/* Spread Rate Chart */}
+        <div className="chart-container">
+          <h2>
+            <span className="chart-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fillRule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+                <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+              </svg>
+            </span>
+            Yayılma Hızı
+          </h2>
+          <div className="chart-wrapper">
+            <Line data={spreadRateData} options={lineOptions} />
+          </div>
+        </div>
+        
+        {/* Risk Factors Chart */}
         <div className="chart-container">
           <h2>
             <span className="chart-icon">
@@ -324,19 +354,19 @@ const GraphicsPage = ({ data, disease, isLoading, toggleGraphicsPage }) => {
           </div>
         </div>
         
-        {/* Line Chart for Spread Rate (using Line instead of Area) */}
+        {/* Drug Prices Chart */}
         <div className="chart-container">
           <h2>
             <span className="chart-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
-                <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+                <path d="M8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
+                <path d="M0 4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V4zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V6a2 2 0 0 1-2-2H3z"/>
               </svg>
             </span>
-            Yayılma Hızı
+            İlaç Fiyatları
           </h2>
           <div className="chart-wrapper">
-            <Line data={spreadRateData} options={lineOptions} />
+            <Bar data={drugPricesData} options={barOptions} />
           </div>
         </div>
         
