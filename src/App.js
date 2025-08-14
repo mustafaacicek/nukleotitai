@@ -4,7 +4,7 @@ import ChatbotHeader from './components/ChatbotHeader';
 import ChatInterface from './components/ChatInterface';
 import DocumentPanel from './components/DocumentPanel';
 import GraphicsPage from './components/GraphicsPage';
-import { getApiEndpoint } from './utils/apiUtils';
+import { getApiEndpoint, fetchWithProxy } from './utils/apiUtils';
 
 function App() {
   const [messages, setMessages] = useState([
