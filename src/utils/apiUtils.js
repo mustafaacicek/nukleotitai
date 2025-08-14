@@ -1,31 +1,38 @@
 /**
- * API URL'yi protokole ve ortama göre ayarlayan yardımcı fonksiyon
- * @returns {string} API URL
- */
-export const getApiUrl = () => {
-  // Her zaman .env dosyasındaki URL'yi kullan
-  let apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
-  
-  // Eğer sayfa HTTPS üzerinden yüklendiyse ve API URL'si HTTP ise, HTTPS'e çevir
-  if (window.location.protocol === 'https:' && apiUrl.startsWith('http:')) {
-    apiUrl = apiUrl.replace('http:', 'https:');
-  }
-  return apiUrl;
-};
-
-/**
  * API endpoint'i oluşturan yardımcı fonksiyon
  * @param {string} path - API endpoint path'i (örn. "/api/chat")
  * @returns {string} Tam API endpoint URL'si
  */
 export const getApiEndpoint = (path) => {
-  const apiUrl = getApiUrl();
+  // Path'in başında / varsa kontrol et
+  const formattedPath = path.startsWith('/') ? path : `/${path}`;
   
-  // Üretim ortamında CORS proxy kullan
-  if (process.env.NODE_ENV === 'production' && !apiUrl.includes('localhost')) {
-    // CORS proxy kullanmak yerine doğrudan URL'yi döndür
-    return `${apiUrl}${path}`;
+  // Doğrudan HTTP kullan - SSL kapalı olduğu için çalışacak
+  return `http://94.154.32.75:8092${formattedPath}`;
+};
+
+/**
+ * Fetch API'yi CORS sorunlarını çözerek kullanmak için yardımcı fonksiyon
+ * @param {string} url - API URL
+ * @param {Object} options - Fetch options
+ * @returns {Promise} Fetch promise
+ */
+export const fetchWithProxy = async (url, options = {}) => {
+  try {
+    // Mode: 'no-cors' kullanarak CORS hatalarını önle
+    const response = await fetch(url, {
+      ...options,
+      mode: 'cors',
+      credentials: 'omit',
+      headers: {
+        ...options.headers,
+        'Origin': window.location.origin,
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    });
+    return response;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    throw error;
   }
-  
-  return `${apiUrl}${path}`;
 };
