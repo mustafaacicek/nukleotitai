@@ -4,7 +4,6 @@ import ChatbotHeader from './components/ChatbotHeader';
 import ChatInterface from './components/ChatInterface';
 import DocumentPanel from './components/DocumentPanel';
 import GraphicsPage from './components/GraphicsPage';
-import { getApiEndpoint, fetchWithProxy } from './utils/apiUtils';
 
 function App() {
   const [messages, setMessages] = useState([
@@ -18,7 +17,7 @@ function App() {
     }
   ]);
   const [isLoading, setIsLoading] = useState(false);
-  const [typingSpeed] = useState(10); // ms per character - hızlandırıldı
+  const [typingSpeed, setTypingSpeed] = useState(10); // ms per character - hızlandırıldı
   
   // Document panel states
   const [showDocPanel, setShowDocPanel] = useState(false);
@@ -92,7 +91,8 @@ function App() {
     
     return new Promise(async (resolve) => {
       try {
-        const response = await fetchWithProxy(getApiEndpoint('/api/graphics'), {
+        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+        const response = await fetch(`${apiUrl}/api/graphics`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -152,7 +152,8 @@ function App() {
       if (graphicsPromise) graphicsPromise.catch(err => console.error('Graphics fetch error:', err));
       
       // Sadece chat API çağrısını bekle
-      const chatResponse = await fetchWithProxy(getApiEndpoint('/api/chat'), {
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+      const chatResponse = await fetch(`${apiUrl}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
