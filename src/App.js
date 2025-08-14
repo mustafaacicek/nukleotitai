@@ -92,8 +92,7 @@ function App() {
     
     return new Promise(async (resolve) => {
       try {
-        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
-        const response = await fetch(`${apiUrl}/api/graphics`, {
+        const response = await fetchWithProxy(getApiEndpoint('/api/graphics'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -153,8 +152,7 @@ function App() {
       if (graphicsPromise) graphicsPromise.catch(err => console.error('Graphics fetch error:', err));
       
       // Sadece chat API çağrısını bekle
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
-      const chatResponse = await fetch(`${apiUrl}/api/chat`, {
+      const chatResponse = await fetchWithProxy(getApiEndpoint('/api/chat'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
